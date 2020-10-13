@@ -1,0 +1,441 @@
+{
+  "openapi" : "3.0.0",
+  "servers" : [ {
+    "description" : "SwaggerHub API Auto Mocking",
+    "url" : "https://virtserver.swaggerhub.com/CASHEW_API/Chekout_API/1.0.0"
+  }, {
+    "description" : "SwaggerHub API Auto Mocking",
+    "url" : "https://api.cashewpayments.com"
+  } ],
+  "info" : {
+    "version" : "1.0.0",
+    "title" : "Checkout API (1.0.0 Draft)",
+    "description" : "Checkout API for Merchant which gives merchant the redirect url to Cashew Hosted Payments page."
+  },
+  "tags" : [ {
+    "name" : "merchants",
+    "description" : "Operations available to merchants"
+  } ],
+  "paths" : {
+    "/checkout" : {
+      "post" : {
+        "tags" : [ "merchants" ],
+        "summary" : "create a new checkout",
+        "operationId" : "createCheckout",
+        "description" : "Creates a checkout flow for the merchant system and cashew hosted payment page integration",
+        "responses" : {
+          "201" : {
+            "description" : "item created",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Response"
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "Item reference not found",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409" : {
+            "description" : "an item already exists",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/BusinessError"
+                }
+              }
+            }
+          }
+        },
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/Order"
+              }
+            }
+          },
+          "description" : "Checkout item to add"
+        }
+      }
+    }
+  },
+  "components" : {
+    "schemas" : {
+      "Address" : {
+        "type" : "object",
+        "properties" : {
+          "firstName" : {
+            "type" : "string",
+            "description" : "First name of the shipment receiver",
+            "example" : "Cashew"
+          },
+          "lastName" : {
+            "type" : "string",
+            "description" : "Lirst name of the shipment receiver",
+            "example" : "Developer"
+          },
+          "phone" : {
+            "type" : "string",
+            "description" : "Phone number of the shipment receiver",
+            "format" : "phone",
+            "example" : "+97102254544"
+          },
+          "alternatePhone" : {
+            "type" : "string",
+            "description" : "Alternate number of the shipment receiver",
+            "format" : "phone",
+            "example" : "+97100000034"
+          },
+          "line1" : {
+            "type" : "string",
+            "description" : "Address line1 for shipment",
+            "example" : "1st street, cat 23"
+          },
+          "line2" : {
+            "type" : "string",
+            "description" : "Address line2 fpr shipment",
+            "example" : "2nd street, cat 23"
+          },
+          "city" : {
+            "type" : "string",
+            "description" : "City of shipment",
+            "example" : "Dubai"
+          },
+          "state" : {
+            "type" : "string",
+            "description" : "State of shipment",
+            "example" : "New York"
+          },
+          "country" : {
+            "type" : "string",
+            "description" : "Country of shipment",
+            "example" : "United Arab Emirates"
+          },
+          "postalCode" : {
+            "type" : "string",
+            "description" : "Postal code of shipment",
+            "example" : "00233"
+          }
+        }
+      },
+      "Shipping" : {
+        "required" : [ "name" ],
+        "properties" : {
+          "reference" : {
+            "type" : "string",
+            "format" : "uuid",
+            "description" : "Unique identifier code for the shipment",
+            "example" : "7ea90f1a-0bed-11eb-adc1-0242ac120002"
+          },
+          "name" : {
+            "type" : "string",
+            "description" : "Name of the shipping company",
+            "example" : "global shippings"
+          },
+          "address" : {
+            "description" : "Address for the shipment",
+            "$ref" : "#/components/schemas/Address"
+          }
+        },
+        "type" : "object"
+      },
+      "Customer" : {
+        "required" : [ "email", "mobileNumber" ],
+        "properties" : {
+          "id" : {
+            "type" : "string",
+            "format" : "uuid",
+            "description" : "Unique identifier of the customer",
+            "example" : "8f6d5b9e-0bed-11eb-adc1-0242ac120002"
+          },
+          "mobileNumber" : {
+            "type" : "string",
+            "description" : "Mobile number of the customer",
+            "format" : "phone",
+            "example" : 97123424556
+          },
+          "email" : {
+            "type" : "string",
+            "format" : "email",
+            "description" : "Email address of the customer",
+            "example" : "developer@cashewpayments.com"
+          },
+          "firstName" : {
+            "type" : "string",
+            "description" : "First name of the customer",
+            "example" : "Cashew"
+          },
+          "lastName" : {
+            "type" : "string",
+            "description" : "Last name of the customer",
+            "example" : "Doe"
+          },
+          "gender" : {
+            "type" : "string",
+            "description" : "Gender of the customer",
+            "example" : "Female"
+          },
+          "account" : {
+            "type" : "string",
+            "description" : "Account number of the customer",
+            "example" : "new"
+          },
+          "dateOfBirth" : {
+            "type" : "string",
+            "format" : "date",
+            "description" : "Date of birth of the customer",
+            "example" : "1990-07-03"
+          },
+          "dateJoined" : {
+            "type" : "string",
+            "format" : "date",
+            "description" : "Joining date of the customer",
+            "example" : "2020-03-01"
+          },
+          "defaultAddress" : {
+            "description" : "Default shipping address of the customer",
+            "$ref" : "#/components/schemas/Address"
+          }
+        }
+      },
+      "Item" : {
+        "required" : [ "reference" ],
+        "properties" : {
+          "reference" : {
+            "type" : "string",
+            "description" : "Unique identifier of item",
+            "format" : "uuid",
+            "example" : "a2623094-0bed-11eb-adc1-0242ac120002"
+          },
+          "name" : {
+            "type" : "string",
+            "description" : "Name of the item",
+            "example" : "Lebron 17"
+          },
+          "description" : {
+            "type" : "string",
+            "description" : "Description of the item",
+            "example" : "Lebron 17 Description"
+          },
+          "url" : {
+            "type" : "string",
+            "description" : "URL of the item",
+            "format" : "url",
+            "example" : "https://cashew-shop/items/lebron17"
+          },
+          "image" : {
+            "type" : "string",
+            "description" : "Image link of the item",
+            "format" : "url",
+            "example" : "https://cashew-shop/items/image/lebron17"
+          },
+          "unitPrice" : {
+            "type" : "number",
+            "description" : "Unit price of item",
+            "format" : "currency",
+            "example" : 200
+          },
+          "quantity" : {
+            "type" : "number",
+            "description" : "Quantity purchased of item",
+            "example" : 2
+          }
+        }
+      },
+      "Discount" : {
+        "required" : [ "code" ],
+        "properties" : {
+          "code" : {
+            "type" : "string",
+            "description" : "Discount unique code",
+            "example" : "2392"
+          },
+          "name" : {
+            "type" : "string",
+            "description" : "name of discount",
+            "example" : "Christmas Promo"
+          },
+          "amount" : {
+            "type" : "number",
+            "description" : "Amount of discount",
+            "format" : "currency",
+            "example" : 20
+          }
+        }
+      },
+      "Merchant" : {
+        "properties" : {
+          "confirmationUrl" : {
+            "type" : "string",
+            "description" : "Confirmation Url provided by merchant",
+            "format" : "url",
+            "example" : "https://www.merchant.com/confirmation"
+          },
+          "cancelUrl" : {
+            "type" : "string",
+            "description" : "Cancellation Url provided by merchant",
+            "format" : "url",
+            "example" : "https://www.merchant.com/cancellation"
+          }
+        }
+      },
+      "Response" : {
+        "properties" : {
+          "status" : {
+            "type" : "string",
+            "description" : "Status of API request",
+            "example" : "SUCCESS"
+          },
+          "message" : {
+            "type" : "string",
+            "description" : "Result of API request",
+            "example" : "Checkout Posted Successfully"
+          },
+          "data" : {
+            "description" : "Data returned by API request",
+            "$ref" : "#/components/schemas/Data"
+          }
+        }
+      },
+      "BusinessError" : {
+        "properties" : {
+          "status" : {
+            "type" : "string",
+            "description" : "Status of API request",
+            "example" : "ERROR"
+          },
+          "message" : {
+            "type" : "string",
+            "description" : "Result of API request",
+            "example" : "an item already exists"
+          },
+          "errorCode" : {
+            "type" : "string",
+            "description" : "Error code of API request",
+            "example" : "409.010.001"
+          }
+        }
+      },
+      "Error" : {
+        "properties" : {
+          "status" : {
+            "type" : "string",
+            "description" : "Status of API request",
+            "example" : "ERROR"
+          },
+          "message" : {
+            "type" : "string",
+            "description" : "Result of API request",
+            "example" : "Item reference not found"
+          },
+          "errorCode" : {
+            "type" : "string",
+            "description" : "Error code of API request",
+            "example" : "400.010.001"
+          }
+        }
+      },
+      "Data" : {
+        "properties" : {
+          "token" : {
+            "type" : "string",
+            "description" : "Order reference created on merchant system",
+            "example" : "a79yd8h3e287e28092rj2"
+          },
+          "orderId" : {
+            "type" : "string",
+            "description" : "Unique identifier of the order created",
+            "format" : "uuid",
+            "example" : "4fc03087-d265-11e7-b8c6-83e29cd24f4c"
+          },
+          "expiryTime" : {
+            "type" : "string",
+            "description" : "Expiry time of the order",
+            "format" : "date",
+            "example" : "2021-01-01"
+          },
+          "url" : {
+            "type" : "string",
+            "description" : "URL of the merchant",
+            "example" : "https://cashew-shop/merchant/url/"
+          }
+        }
+      },
+      "Order" : {
+        "properties" : {
+          "orderReference" : {
+            "type" : "string",
+            "format" : "uuid",
+            "description" : "Merchant system order reference",
+            "example" : "5fc03087-d265-11e7-b8c6-83e29cd24f5c"
+          },
+          "totalAmount" : {
+            "type" : "number",
+            "description" : "Total amount of the order",
+            "format" : "currency",
+            "example" : 2000
+          },
+          "taxAmount" : {
+            "type" : "number",
+            "description" : "Tax amount on the order",
+            "format" : "currency",
+            "example" : 25
+          },
+          "currencyCode" : {
+            "type" : "string",
+            "description" : "Currency code of the order amount",
+            "example" : "AED"
+          },
+          "numInstallment" : {
+            "type" : "integer",
+            "description" : "Number of installments for divide",
+            "example" : 2
+          },
+          "shipping" : {
+            "description" : "Shipping address for the order",
+            "$ref" : "#/components/schemas/Shipping"
+          },
+          "billingAddress" : {
+            "description" : "Billing address of the order",
+            "$ref" : "#/components/schemas/Address"
+          },
+          "customer" : {
+            "description" : "Customer details of the order",
+            "$ref" : "#/components/schemas/Customer"
+          },
+          "items" : {
+            "type" : "array",
+            "description" : "Items which are included in the order",
+            "items" : {
+              "$ref" : "#/components/schemas/Item"
+            }
+          },
+          "discounts" : {
+            "type" : "array",
+            "description" : "Discounts applicable on the order",
+            "items" : {
+              "$ref" : "#/components/schemas/Discount"
+            }
+          },
+          "merchant" : {
+            "description" : "Merchant of the order",
+            "$ref" : "#/components/schemas/Merchant"
+          },
+          "metaData" : {
+            "description" : "Metadata of the order",
+            "type" : "object"
+          }
+        }
+      }
+    }
+  }
+}
